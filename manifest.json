@@ -1,0 +1,10 @@
+{
+  "id": "obsidian-auto-image-remote-uploader",
+  "name": "Obsidian Auto Image Remote Uploader",
+  "version": "0.1.0",
+  "minAppVersion": "0.10.7",
+  "description": "auto upload image with website upload service & nas upload service",
+  "author": "haierspi",
+  "authorUrl": "https://github.com/haierspi/obsidian-auto-image-remote-uploader",
+  "isDesktopOnly": true
+}
