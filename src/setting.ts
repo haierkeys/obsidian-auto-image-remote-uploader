@@ -85,7 +85,7 @@ export class SettingTab extends PluginSettingTab {
           .setPlaceholder(t("Please input upload api authtoken"))
           .setValue(this.plugin.settings.imageApiAuth)
           .onChange(async key => {
-            this.plugin.settings.imageApi = key;
+            this.plugin.settings.imageApiAuth = key;
             await this.plugin.saveSettings();
           })
       );
