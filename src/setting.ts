@@ -6,10 +6,8 @@ import { getOS } from "./utils";
 export interface PluginSettings {
   uploadByClipSwitch: boolean;
   imageApi: string;
-  deleteServer: string;
+  imageApiAuth: string;
   imageSizeSuffix: string;
-  uploader: string;
-  picgoCorePath: string;
   workOnNetWork: boolean;
   newWorkBlackDomains: string;
   fixPath: boolean;
@@ -21,11 +19,9 @@ export interface PluginSettings {
 
 export const DEFAULT_SETTINGS: PluginSettings = {
   uploadByClipSwitch: true,
-  uploader: "PicGo",
   imageApi: "http://127.0.0.1:36677/upload",
-  deleteServer: "http://127.0.0.1:36677/delete",
+  imageApiAuth: "",
   imageSizeSuffix: "",
-  picgoCorePath: "",
   workOnNetWork: false,
   fixPath: false,
   applyImage: true,
@@ -48,7 +44,9 @@ export class SettingTab extends PluginSettingTab {
     const os = getOS();
 
     containerEl.empty();
-    containerEl.createEl("h2", { text: t("Obsidian Auto Image Remote Uploader Plugin Settings") });
+    containerEl.createEl("h2", {
+      text: t("Obsidian Auto Image Remote Uploader Plugin Settings"),
+    });
 
     new Setting(containerEl)
       .setName(t("Auto pasted upload"))
@@ -66,10 +64,9 @@ export class SettingTab extends PluginSettingTab {
           })
       );
 
-
     new Setting(containerEl)
-      .setName(t("Default uploader API"))
-      .setDesc(t("Default uploader API desc"))
+      .setName(t("image upload API"))
+      .setDesc(t("image upload API desc"))
       .addText(text =>
         text
           .setPlaceholder(t("Please input uploader api"))
@@ -80,6 +77,18 @@ export class SettingTab extends PluginSettingTab {
           })
       );
 
+    new Setting(containerEl)
+      .setName(t("image upload API Authtoken"))
+      .setDesc(t("image upload API Authtoken Desc"))
+      .addText(text =>
+        text
+          .setPlaceholder(t("Please input upload api authtoken"))
+          .setValue(this.plugin.settings.imageApiAuth)
+          .onChange(async key => {
+            this.plugin.settings.imageApi = key;
+            await this.plugin.saveSettings();
+          })
+      );
 
     // image desc setting
     new Setting(containerEl)

@@ -6,9 +6,12 @@ export default {
   "Auto pasted upload": "Auto pasted upload",
   "If you set this value true, when you paste image, it will be auto uploaded(you should set the picGo server rightly)":
     "If you set this value true, when you paste image, it will be auto uploaded(you should set the picGo server rightly)",
-  "Default uploader API": "Default uploader API",
-  "Default uploader API desc": "Default uploader API desc",
+  "image upload API": "image upload API",
+  "image upload API desc": "image upload API desc",
   "Please input uploader api": "Please input uploader api",
+  "image upload API Authtoken": "远端图片上传管理服务API授权Token",
+  "image upload API Authtoken Desc": "远端图片上传管理服务API授权Token",
+  "Please input upload api authtoken": "Please input upload api authtoken",
 
   "Delete successfully": "Delete successfully",
   "Delete failed": "Delete failed",
@@ -16,14 +19,9 @@ export default {
   "Image size suffix Description": "like |300 for resize image in ob.",
   "Please input image size suffix": "Please input image size suffix",
   "Error, could not delete": "Error, could not delete",
-  "Please input PicGo-Core path, default using environment variables":
-    "Please input PicGo-Core path, default using environment variables",
   "Work on network": "Work on network",
   "Work on network Description":
     "Allow upload network image by 'Upload all' command.\n Or when you paste, md standard image link in your clipboard will be auto upload.",
-  fixPath: "fixPath",
-  fixPathWarning:
-    "This option is used to fix PicGo-core upload failures on Linux and Mac. It modifies the PATH variable within Obsidian. If Obsidian encounters any bugs, turn off the option, try again! ",
   "Upload when clipboard has image and text together":
     "Upload when clipboard has image and text together",
   "When you copy, some application like Excel will image and text to clipboard, you can upload or not.":
@@ -39,6 +37,7 @@ export default {
   reserve: "default",
   "remove all": "none",
   "remove default": "remove image.png",
+
   "Please select the markdown note you want to edit":
     "Please select the markdown note you want to edit",
 };

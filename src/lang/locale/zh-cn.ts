@@ -7,9 +7,12 @@ export default {
   "Auto pasted upload": "剪切板自动上传",
   "If you set this value true, when you paste image, it will be auto uploaded(you should set the picGo server rightly)":
     "启用该选项后，黏贴图片时会自动上传",
-  "Default uploader API": "远端图片上传管理服务API",
-  "Default uploader API desc": "远端图片上传管理服务API需要支持 POST 和 DELETE",
+  "image upload API": "远端图片上传管理服务API",
+  "image upload API desc": "远端图片上传管理服务API需要支持 POST 和 DELETE",
   "Please input uploader api": "图片上传管理服务API",
+  "image upload API Authtoken": "远端图片上传管理服务API授权Token",
+  "image upload API Authtoken Desc": "远端图片上传管理服务API授权Token",
+  "Please input upload api authtoken": "API授权Token",
 
   "Delete successfully": "删除成功",
   "Delete failed": "删除失败",
@@ -20,9 +23,6 @@ export default {
   "Work on network": "应用网络图片",
   "Work on network Description":
     "当你上传所有图片时，也会上传网络图片。以及当你进行黏贴时，剪切板中的标准 md 图片会被上传",
-  fixPath: "修正PATH变量",
-  fixPathWarning:
-    "此选项用于修复Linux和Mac上 PicGo-Core 上传失败的问题。它会修改 Obsidian 内的 PATH 变量，如果 Obsidian 遇到任何BUG，先关闭这个选项试试！",
   "Upload when clipboard has image and text together":
     "当剪切板同时拥有文本和图片剪切板数据时是否上传图片",
   "When you copy, some application like Excel will image and text to clipboard, you can upload or not.":

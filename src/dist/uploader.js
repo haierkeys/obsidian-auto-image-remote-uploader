@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function () { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function () { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -80,10 +80,10 @@ var RemoteUploader = /** @class */ (function () {
                         formData = new FormData();
                         formData.append("name", filename.format());
                         return [4 /*yield*/, fetch(this.settings.imageApi, {
-                                method: "POST",
-                                headers: { "Content-Type": "multipart/form-data" },
-                                body: formData
-                            })];
+                            method: "POST",
+                            headers: { "Content-Type": "multipart/form-data" },
+                            body: formData
+                        })];
                     case 1:
                         response = _a.sent();
                         if (!!response.ok) return [3 /*break*/, 3];
@@ -97,7 +97,7 @@ var RemoteUploader = /** @class */ (function () {
                         console.log("uploadFile response", res);
                         res.success = true;
                         this.settings.uploadedImages = __spreadArrays((this.settings.uploadedImages || []), [
-                            res.data.imageurl,
+                            res.data.imageUrl,
                         ]);
                         return [2 /*return*/, res];
                 }
@@ -116,10 +116,10 @@ var RemoteUploader = /** @class */ (function () {
                         file = new File([blob], ufile.originalPath);
                         requestData.append("imagefile", file);
                         return [4 /*yield*/, fetch(this.settings.imageApi, {
-                                method: "POST",
-                                headers: new Headers({ Authorization: "Client-ID" }),
-                                body: requestData
-                            })];
+                            method: "POST",
+                            headers: new Headers({ Authorization: "Client-ID" }),
+                            body: requestData
+                        })];
                     case 1:
                         response = _a.sent();
                         if (!!response.ok) return [3 /*break*/, 3];
@@ -133,7 +133,7 @@ var RemoteUploader = /** @class */ (function () {
                         console.log("uploadFileByClipboard response", res);
                         res.success = true;
                         this.settings.uploadedImages = __spreadArrays((this.settings.uploadedImages || []), [
-                            res.data.imageurl,
+                            res.data.imageUrl,
                         ]);
                         return [2 /*return*/, res];
                 }
@@ -149,10 +149,10 @@ var RemoteUploader = /** @class */ (function () {
                         requestData = new FormData();
                         requestData.append("imagefile", image);
                         return [4 /*yield*/, fetch(this.settings.imageApi, {
-                                method: "POST",
-                                headers: new Headers({ Authorization: "Client-ID" }),
-                                body: requestData
-                            })];
+                            method: "POST",
+                            headers: new Headers({ Authorization: "Client-ID" }),
+                            body: requestData
+                        })];
                     case 1:
                         response = _a.sent();
                         if (!!response.ok) return [3 /*break*/, 3];
@@ -166,7 +166,7 @@ var RemoteUploader = /** @class */ (function () {
                         console.log("uploadFileByClipboard response", res);
                         res.success = true;
                         this.settings.uploadedImages = __spreadArrays((this.settings.uploadedImages || []), [
-                            res.data.imageurl,
+                            res.data.imageUrl,
                         ]);
                         return [2 /*return*/, res];
                 }
@@ -179,13 +179,13 @@ var RemoteUploader = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, obsidian_1.requestUrl({
-                            url: this.plugin.settings.imageApi,
-                            method: "DELETE",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                list: configMap
-                            })
-                        })];
+                        url: this.plugin.settings.imageApi,
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            list: configMap
+                        })
+                    })];
                     case 1:
                         response = _a.sent();
                         data = response.json;

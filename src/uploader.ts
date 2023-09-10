@@ -13,7 +13,8 @@ export interface ApiResponse {
   status: number;
   msg: string;
   data: {
-    imageurl: string;
+    imageUrl: string;
+    imageTitle: string;
   };
 }
 
@@ -40,7 +41,10 @@ export class RemoteUploader {
 
     const response = await fetch(this.settings.imageApi, {
       method: "POST",
-      headers: { "Content-Type": "multipart/form-data" },
+      headers:
+        this.settings.imageApiAuth == ""
+          ? new Headers()
+          : new Headers({ Authorization: this.settings.imageApiAuth }),
       body: formData,
     });
 
@@ -53,10 +57,12 @@ export class RemoteUploader {
     console.log("uploadFile response", res);
 
     res.success = true;
+    res.data.imageTitle =
+      res.data.imageTitle == null ? "" : res.data.imageTitle;
 
     this.settings.uploadedImages = [
       ...(this.settings.uploadedImages || []),
-      res.data.imageurl,
+      res.data.imageUrl,
     ];
 
     return res;
@@ -74,7 +80,10 @@ export class RemoteUploader {
 
     const response = await fetch(this.settings.imageApi, {
       method: "POST",
-      headers: new Headers({ Authorization: `Client-ID` }),
+      headers:
+        this.settings.imageApiAuth == ""
+          ? new Headers()
+          : new Headers({ Authorization: this.settings.imageApiAuth }),
       body: requestData,
     });
 
@@ -87,10 +96,12 @@ export class RemoteUploader {
     console.log("uploadFileByClipboard response", res);
 
     res.success = true;
+    res.data.imageTitle =
+      res.data.imageTitle == null ? "" : res.data.imageTitle;
 
     this.settings.uploadedImages = [
       ...(this.settings.uploadedImages || []),
-      res.data.imageurl,
+      res.data.imageUrl,
     ];
 
     return res;
@@ -102,7 +113,10 @@ export class RemoteUploader {
 
     const response = await fetch(this.settings.imageApi, {
       method: "POST",
-      headers: new Headers({ Authorization: `Client-ID` }),
+      headers:
+        this.settings.imageApiAuth == ""
+          ? new Headers()
+          : new Headers({ Authorization: this.settings.imageApiAuth }),
       body: requestData,
     });
 
@@ -115,25 +129,14 @@ export class RemoteUploader {
     console.log("uploadFileByClipboard response", res);
 
     res.success = true;
+    res.data.imageTitle =
+      res.data.imageTitle == null ? "" : res.data.imageTitle;
 
     this.settings.uploadedImages = [
       ...(this.settings.uploadedImages || []),
-      res.data.imageurl,
+      res.data.imageUrl,
     ];
 
     return res;
-  }
-
-  async deleteImage(configMap: IStringKeyMap<any>[]) {
-    const response = await requestUrl({
-      url: this.plugin.settings.imageApi,
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        list: configMap,
-      }),
-    });
-    const data = response.json;
-    return data;
   }
 }

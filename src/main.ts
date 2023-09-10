@@ -332,9 +332,11 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
     Array.from(imageList).forEach((image, index) => {
       this.uploader.uploadUrlFile(image.path).then(res => {
         if (res.success) {
-          const uploadImage = res.data.imageurl;
+          const uploadImage = res.data.imageUrl;
 
-          let name = this.handleName(image.name);
+          let name = this.handleName(
+            res.data.imageTitle != "" ? res.data.imageTitle : image.name
+          );
           content = content.replaceAll(
             image.source,
             `![${name}](${uploadImage})`
@@ -398,7 +400,7 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
   // uploda all file
   uploadAllFile() {
     if (this.app.workspace.getActiveViewOfType(MarkdownView) == null) {
-      new Notice(t("Please select the current editing note"));
+      new Notice(t("Please select the markdown note you want to edit"));
       return;
     }
 
@@ -500,12 +502,13 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
       ) {
         try {
           let rfile = await file;
-          console.dir(image);
 
           _this.uploader.uploadFileByBlob(rfile, image).then(res => {
             if (res.success) {
-              const uploadImage = res.data.imageurl;
-              let name = _this.handleName(image.name);
+              const uploadImage = res.data.imageUrl;
+              let name = _this.handleName(
+                res.data.imageTitle != "" ? res.data.imageTitle : image.name
+              );
               content = content.replaceAll(
                 image.source,
                 `![${name}](${uploadImage})`
@@ -578,9 +581,13 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
               Array.from(imageList).forEach((image, index) => {
                 this.uploader.uploadUrlFile(image.path).then(res => {
                   if (res.success) {
-                    const uploadImage = res.data.imageurl;
+                    const uploadImage = res.data.imageUrl;
                     let value = this.helper.getValue();
-                    let name = this.handleName(image.name);
+                    let name = this.handleName(
+                      res.data.imageTitle != ""
+                        ? res.data.imageTitle
+                        : image.name
+                    );
                     value = value.replaceAll(
                       image.source,
                       `![${name}](${uploadImage})`
@@ -605,9 +612,7 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
                     this.handleFailedUpload(editor, pasteId, res.msg);
                     return;
                   }
-                  const url = res.data.imageurl;
-
-                  return url;
+                  return { url: res.data.imageUrl, name: res.data.imageTitle };
                 },
                 evt.clipboardData
               ).catch();
@@ -635,17 +640,18 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
           if (files.length !== 0 && files[0].type.startsWith("image")) {
             let files = evt.dataTransfer.files;
             Array.from(files).forEach((image, index) => {
-              console.dir(image);
-
               this.uploader.uploadFile(image).then(res => {
                 if (res.success) {
                   let pasteId = (Math.random() + 1).toString(36).substr(2, 5);
+
                   this.insertTemporaryText(editor, pasteId);
                   this.embedMarkDownImage(
                     editor,
                     pasteId,
-                    res.data.imageurl,
-                    files[0].name
+                    res.data.imageUrl,
+                    res.data.imageTitle != ""
+                      ? res.data.imageTitle
+                      : files[0].name
                   );
                 } else {
                   new Notice("Upload error");
@@ -689,8 +695,13 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
     const name = clipboardData.files[0].name;
 
     try {
-      const url = await callback(editor, pasteId);
-      this.embedMarkDownImage(editor, pasteId, url, name);
+      const c = await callback(editor, pasteId);
+      this.embedMarkDownImage(
+        editor,
+        pasteId,
+        c.url,
+        c.name != "" ? c.name : name
+      );
     } catch (e) {
       this.handleFailedUpload(editor, pasteId, e);
     }
