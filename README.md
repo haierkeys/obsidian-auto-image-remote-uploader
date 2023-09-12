@@ -1,5 +1,5 @@
 [中文文档](readme-zh.md)
-# Obsidian Auto Image Remote Uploader
+# Auto Image Remote Uploader For Obsidian
 
 Add remote image uploading and saving function for Obsidian, main features:
 

@@ -1,6 +1,6 @@
 [English Document](README.md)
 
-# Obsidian Auto Image Remote Uploader
+# Auto Image Remote Uploader For Obsidian
 
 为 Obsidian 增加图片远端上传保存功能,主要特性:
 
