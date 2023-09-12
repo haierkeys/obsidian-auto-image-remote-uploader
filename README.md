@@ -1,53 +1,74 @@
+[中文文档](readme-zh.md)
 # Obsidian Auto Image Remote Uploader
 
-Obsidian 自动远端图片上传插件, 支持将您的 Obsidian 笔记的图片上传到远端服务器上,并且支持同步到云存储上
+Add remote image uploading and saving function for Obsidian, main features:
 
-例如: 将图片上传到 您的 NAS 服务器上,并同步到您的 亚马逊云 S3 上
+- Drag and drop image upload
+- Paste Image Upload
+- Right click image upload
+- Batch download web images to local
+- Batch upload all local image files in notes
+- Batch upload all local image files of notes to a remote server, e.g. your web server or your home NAS.
+- You can choose to synchronize to cloud storage at the same time, e.g. AliCloud OSS / AWS S3 / Google ECS.
+## Price
 
-# 开始
+This plugin is provided free of charge to everyone, but if you would like to show your appreciation or help support the continued development, please feel free to provide me with a little help in any of the following ways:
 
-1. 安装插件
-2. 打开插件配置项，设置`远端上传服务`为您的上传API接口`http://127.0.0.1:666/file`（ 该接口需要支持POST,DELETE两种方式,用于处理图片上传和删除操作 ）
-3. 接下来试试看能否上传成功
+- [! [Paypal](https://img.shields.io/badge/paypal-HaierSpi-yellow?style=social&logo=paypal)](https://paypal.me/haierspi)
 
-# 特性
+- [<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="BuyMeACoffee" width="100">](https://www.buymeacoffee.com /haierspi)
+<img src="https://raw.githubusercontent.com/haierspi/obsidian-auto-image-remote-uploader/main/bmc_qr.png" style="width:120px;height. auto;">
 
-## 剪切板上传
 
-支持黏贴剪切板的图片的时候直接上传，目前支持复制系统内图像直接上传。
-支持通过设置 `frontmatter` 来控制单个文件的上传，默认值为 `true`，控制关闭请将该值设置为 `false`
+- Love Power https://afdian.net/a/haierspi
 
-支持 ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".svg", ".tiff"
+# Getting Started
 
+1. Install the plugin
+2. Open the plugin configuration item, set **image-upload-api** to your image upload API `http://127.0.0.1:8000/api/upload`, and set **authorization-token**.
+3. Start the **golang-image-upload-service** service. 4.
+4. Open the **golang-image-upload-service** service and see if it uploads successfully
+
+## Image upload API server
+
+This plugin requires **golang-image-upload-service** https://github.com/haierspi/golang-image-upload-service to work properly.
+
+## Help
+
+## Clipboard Upload
+
+Support uploading images directly when you paste them from clipboard, currently support copying images from the system and uploading them directly.
+Support to control single file upload by setting `frontmatter`, default value is `true`, to turn off control, please set the value to `false`.
+
+Support ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".svg", ".tiff".
 
 ```yaml
 ---
 image-auto-upload: true
----
+--- - - - - - - - - - - - - - - - - - - - - - -
 ```
 
-## 批量上传一个文件中的所有图像文件
+## Batch upload all image files in a file
 
-输入 `ctrl+P` 呼出面板，输入 `upload all images`，点击回车，就会自动开始上传。
+Type `ctrl+P` to call out the panel, type `upload all images`, hit enter and the upload will start automatically.
 
-路径解析优先级，会依次按照优先级查找：
+Path resolution priority, it will look up the paths in order of priority:
 
-1. 绝对路径，指基于库的绝对路径
-2. 相对路径，以./或../开头
-3. 尽可能简短的形式
+1. absolute path, refers to the absolute path based on the library
+2. relative paths, which start with . / or . / or .
+3. as short as possible
 
-## 批量下载网络图片到本地
+## Batch download web images to local
 
-输入 `ctrl+P` 呼出面板，输入 `download all images`，点击回车，就会自动开始下载。只在 win 进行过测试
+Type `ctrl+P` to call out the panel, type `download all images` and click enter, the download will start automatically.
 
-## 支持右键菜单上传图片
+## Support right-click menu to upload images
 
-~~只支持使用标准 md 语法下的基于当前笔记的相对路径。~~
+Standard md and wiki formats are supported. Relative and absolute paths are supported, you need to set them correctly, otherwise it will cause strange problems.
 
-目前已支持标准 md 以及 wiki 格式。支持相对路径以及绝对路径，需要进行正确设置，不然会引发奇怪的问题
+## Drag-and-drop uploading
+Drag and drop of images is supported.
 
-## 支持拖拽上传
-
-# 感谢
+## Thanks to
 
 https://github.com/renmu123/obsidian-image-auto-upload-plugin

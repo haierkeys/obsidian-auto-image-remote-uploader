@@ -30,6 +30,7 @@ import Helper, { Image } from "./helper";
 import { t } from "./lang/helpers";
 
 import { SettingTab, PluginSettings, DEFAULT_SETTINGS } from "./setting";
+import { error } from "console";
 
 interface KeyImageFiles {
   [propName: string]: Promise<ArrayBuffer>;
@@ -199,7 +200,9 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
 
     const currentFile = this.app.workspace.getActiveFile();
     if (activeFile.path !== currentFile.path) {
-      new Notice("当前文件已变更，下载失败");
+      new Notice(
+        t("The current file has been changed, and the download has failed")
+      );
       return;
     }
     this.helper.setValue(value);
@@ -325,13 +328,14 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
     }
 
     if (imageList.length === 0) {
-      new Notice("没有解析到图像文件");
+      new Notice(t("No image file was parsed"));
       return;
     }
 
     Array.from(imageList).forEach((image, index) => {
+      0;
       this.uploader.uploadUrlFile(image.path).then(res => {
-        if (res.success) {
+        if (res != undefined && res.status) {
           const uploadImage = res.data.imageUrl;
 
           let name = this.handleName(
@@ -352,7 +356,7 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
             });
           }
         } else {
-          new Notice("Upload error");
+          new Notice(t("Upload error"));
         }
       });
     });
@@ -486,10 +490,13 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
     }
 
     if (imageList.length === 0) {
-      new Notice("没有解析到图像文件");
+      new Notice(t("No image file was parsed"));
       return;
     } else {
-      new Notice(`共找到${imageList.length}个图像文件，开始上传`);
+      new Notice(
+        imageList.length +
+          t("image files have been found, and the upload has started")
+      );
     }
 
     Array.from(imageList).forEach((image, index) => {
@@ -504,7 +511,7 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
           let rfile = await file;
 
           _this.uploader.uploadFileByBlob(rfile, image).then(res => {
-            if (res.success) {
+            if (res != undefined && res.status) {
               const uploadImage = res.data.imageUrl;
               let name = _this.handleName(
                 res.data.imageTitle != "" ? res.data.imageTitle : image.name
@@ -515,7 +522,11 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
               );
               const currentFile = _this.app.workspace.getActiveFile();
               if (activeFile.path !== currentFile.path) {
-                new Notice("当前文件已变更，上传失败");
+                new Notice(
+                  t(
+                    "The current file has been changed, and the upload has failed"
+                  )
+                );
                 return;
               }
               _this.helper.setValue(content);
@@ -527,7 +538,7 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
                 });
               }
             } else {
-              new Notice("Upload error");
+              new Notice(t("Upload error"));
             }
           });
         } catch (err) {
@@ -557,12 +568,6 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
 
           let files = evt.clipboardData.files;
 
-          if (!allowUpload) {
-            return;
-          }
-
-          evt.preventDefault();
-
           // 剪贴板内容有md格式的图片时
           if (this.settings.workOnNetWork) {
             const clipboardValue = evt.clipboardData.getData("text/plain");
@@ -580,7 +585,7 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
             if (imageList.length !== 0) {
               Array.from(imageList).forEach((image, index) => {
                 this.uploader.uploadUrlFile(image.path).then(res => {
-                  if (res.success) {
+                  if (res != undefined && res.status) {
                     const uploadImage = res.data.imageUrl;
                     let value = this.helper.getValue();
                     let name = this.handleName(
@@ -594,7 +599,7 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
                     );
                     this.helper.setValue(value);
                   } else {
-                    new Notice("Upload error");
+                    new Notice(t("Upload error"));
                   }
                 });
               });
@@ -608,11 +613,14 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
                 editor,
                 async (editor: Editor, pasteId: string) => {
                   let res = await this.uploader.uploadFile(file);
-                  if (!res.success) {
-                    this.handleFailedUpload(editor, pasteId, res.msg);
-                    return;
+                  if (res != undefined && res.status) {
+                    return {
+                      url: res.data.imageUrl,
+                      name: res.data.imageTitle,
+                    };
+                  } else {
+                    return null;
                   }
-                  return { url: res.data.imageUrl, name: res.data.imageTitle };
                 },
                 evt.clipboardData
               ).catch();
@@ -641,7 +649,8 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
             let files = evt.dataTransfer.files;
             Array.from(files).forEach((image, index) => {
               this.uploader.uploadFile(image).then(res => {
-                if (res.success) {
+                if (res != undefined && res.status) {
+                  console.log(res);
                   let pasteId = (Math.random() + 1).toString(36).substr(2, 5);
 
                   this.insertTemporaryText(editor, pasteId);
@@ -654,7 +663,7 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
                       : files[0].name
                   );
                 } else {
-                  new Notice("Upload error");
+                  new Notice(t("Upload error"));
                 }
               });
             });
@@ -669,8 +678,6 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
     this.settings.applyImage;
     const files = clipboardData.files;
     const text = clipboardData.getData("text");
-
-    console.log(clipboardData.files);
 
     const hasImageFile =
       files.length !== 0 && files[0].type.startsWith("image");
@@ -696,12 +703,17 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
 
     try {
       const c = await callback(editor, pasteId);
-      this.embedMarkDownImage(
-        editor,
-        pasteId,
-        c.url,
-        c.name != "" ? c.name : name
-      );
+
+      if (c != null) {
+        this.embedMarkDownImage(
+          editor,
+          pasteId,
+          c.url,
+          c.name != "" ? c.name : name
+        );
+      } else {
+        this.handleFailedUpload(editor, pasteId, t("Upload error"));
+      }
     } catch (e) {
       this.handleFailedUpload(editor, pasteId, e);
     }
@@ -736,12 +748,13 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
 
   handleFailedUpload(editor: Editor, pasteId: string, reason: any) {
     new Notice(reason);
-    console.error("Failed request: ", reason);
     let progressText = autoImageRemoteUploaderPlugin.progressTextFor(pasteId);
     autoImageRemoteUploaderPlugin.replaceFirstOccurrence(
       editor,
       progressText,
-      "⚠️upload failed, check dev console"
+      t(
+        "Upload error, please check your Vault configuration and network connection"
+      )
     );
   }
 

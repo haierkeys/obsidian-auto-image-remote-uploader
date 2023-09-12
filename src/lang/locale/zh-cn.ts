@@ -6,12 +6,12 @@ export default {
     "自动远端图片上传插件设置",
   "Auto pasted upload": "剪切板自动上传",
   "If you set this value true, when you paste image, it will be auto uploaded(you should set the picGo server rightly)":
-    "启用该选项后，黏贴图片时会自动上传",
-  "image upload API": "远端图片上传管理服务API",
-  "image upload API desc": "远端图片上传管理服务API需要支持 POST 和 DELETE",
+    "启用该选项后，粘贴图片时会自动上传",
+  "image upload API": "图片上传API",
+  "image upload API desc": "远端图片上传API服务",
   "Please input uploader api": "图片上传管理服务API",
-  "image upload API Authtoken": "远端图片上传管理服务API授权Token",
-  "image upload API Authtoken Desc": "远端图片上传管理服务API授权Token",
+  "image upload API Authtoken": "图片上传API授权令牌",
+  "image upload API Authtoken Desc": "远端图片上传API授权令牌/访问Token",
   "Please input upload api authtoken": "API授权Token",
 
   "Delete successfully": "删除成功",
@@ -39,4 +39,17 @@ export default {
   "remove default": "移除image.png",
   "Please select the markdown note you want to edit":
     "请选中当前编辑markdown笔记",
+
+  "Upload error": "上传失败",
+  "Upload error, please check your Vault configuration and network connection":
+    "~~⚠️上传错误，请检查您的Vault配置和网络连接~~",
+
+  "No image file was parsed": "没有解析到图像文件",
+  "image files have been found, and the upload has started":
+    "个图像文件已发现，开始上传",
+  "The current file has been changed, and the download has failed":
+    "当前文件已变更，下载失败",
+  "The current file has been changed, and the upload has failed":
+    "当前文件已变更，上传失败",
+  "Image Upload API error": "图片上传API错误",
 };

@@ -7,22 +7,52 @@ import { IStringKeyMap } from "./utils";
 import ApiError from "./ApiError";
 import { lookup, contentType, extension, charset, types } from "es-mime-types";
 import { Image } from "./helper";
+import { t } from "./lang/helpers";
 export interface ApiResponse {
   success: boolean;
   code: number;
-  status: number;
-  msg: string;
+  status: boolean;
+  message: string;
   data: {
     imageUrl: string;
     imageTitle: string;
   };
 }
 
-export async function handleApiResponseError(resp: Response): Promise<void> {
+export async function handleApiResponseServerError(
+  resp: Response
+): Promise<void> {
   if (resp.headers.get("Content-Type") === "application/json") {
-    throw new ApiError(((await resp.json()) as ApiResponse).msg);
+    let errMsg = ((await resp.json()) as ApiResponse).message;
+    new Notice(t("Image Upload API error") + ": " + errMsg);
+    throw new ApiError(errMsg);
   }
-  throw new Error(await resp.text());
+  let errMsg = await resp.text();
+  new Notice(t("Image Upload API error") + ": " + errMsg);
+  throw new Error(errMsg);
+}
+
+export async function handleApiResponse(
+  resp: Response,
+  settings: PluginSettings
+): Promise<ApiResponse> {
+  let x = await resp.json();
+
+  if (!x.status) {
+    new Notice(t("Image Upload API error") + ": " + x.message);
+    return;
+  }
+
+  let res: ApiResponse = x as ApiResponse;
+  res.success = true;
+  res.data.imageTitle = res.data.imageTitle;
+
+  settings.uploadedImages = [
+    ...(settings.uploadedImages || []),
+    res.data.imageUrl,
+  ];
+
+  return res;
 }
 
 export class RemoteUploader {
@@ -35,37 +65,30 @@ export class RemoteUploader {
   }
 
   async uploadUrlFile(filename: String): Promise<any> {
-    let formData = new FormData();
+    let requestData = new FormData();
 
-    formData.append("name", filename.format());
+    requestData.append("name", filename.format());
 
-    const response = await fetch(this.settings.imageApi, {
-      method: "POST",
-      headers:
-        this.settings.imageApiAuth == ""
-          ? new Headers()
-          : new Headers({ Authorization: this.settings.imageApiAuth }),
-      body: formData,
-    });
-
-    if (!response.ok) {
-      await handleApiResponseError(response);
+    let response;
+    try {
+      response = await fetch(this.settings.imageApi, {
+        method: "POST",
+        headers:
+          this.settings.imageApiAuth == ""
+            ? new Headers()
+            : new Headers({ Authorization: this.settings.imageApiAuth }),
+        body: requestData,
+      });
+      // business logic goes here
+    } catch (error) {
+      new Notice(t("Image Upload API error") + ": " + error.toString());
+      return error;
     }
 
-    let res = (await response.json()) as ApiResponse;
-
-    console.log("uploadFile response", res);
-
-    res.success = true;
-    res.data.imageTitle =
-      res.data.imageTitle == null ? "" : res.data.imageTitle;
-
-    this.settings.uploadedImages = [
-      ...(this.settings.uploadedImages || []),
-      res.data.imageUrl,
-    ];
-
-    return res;
+    if (!response.ok) {
+      await handleApiResponseServerError(response);
+    }
+    return await handleApiResponse(response, this.settings);
   }
 
   async uploadFileByBlob(content: ArrayBuffer, ufile: Image): Promise<any> {
@@ -78,65 +101,51 @@ export class RemoteUploader {
 
     requestData.append("imagefile", file);
 
-    const response = await fetch(this.settings.imageApi, {
-      method: "POST",
-      headers:
-        this.settings.imageApiAuth == ""
-          ? new Headers()
-          : new Headers({ Authorization: this.settings.imageApiAuth }),
-      body: requestData,
-    });
-
-    if (!response.ok) {
-      await handleApiResponseError(response);
+    let response;
+    try {
+      response = await fetch(this.settings.imageApi, {
+        method: "POST",
+        headers:
+          this.settings.imageApiAuth == ""
+            ? new Headers()
+            : new Headers({ Authorization: this.settings.imageApiAuth }),
+        body: requestData,
+      });
+      // business logic goes here
+    } catch (error) {
+      new Notice(t("Image Upload API error") + ": " + error.toString());
+      return error;
     }
 
-    let res = (await response.json()) as ApiResponse;
-
-    console.log("uploadFileByClipboard response", res);
-
-    res.success = true;
-    res.data.imageTitle =
-      res.data.imageTitle == null ? "" : res.data.imageTitle;
-
-    this.settings.uploadedImages = [
-      ...(this.settings.uploadedImages || []),
-      res.data.imageUrl,
-    ];
-
-    return res;
+    if (!response.ok) {
+      await handleApiResponseServerError(response);
+    }
+    return await handleApiResponse(response, this.settings);
   }
 
   async uploadFile(image: File): Promise<any> {
     let requestData = new FormData();
     requestData.append("imagefile", image);
 
-    const response = await fetch(this.settings.imageApi, {
-      method: "POST",
-      headers:
-        this.settings.imageApiAuth == ""
-          ? new Headers()
-          : new Headers({ Authorization: this.settings.imageApiAuth }),
-      body: requestData,
-    });
-
-    if (!response.ok) {
-      await handleApiResponseError(response);
+    let response;
+    try {
+      response = await fetch(this.settings.imageApi, {
+        method: "POST",
+        headers:
+          this.settings.imageApiAuth == ""
+            ? new Headers()
+            : new Headers({ Authorization: this.settings.imageApiAuth }),
+        body: requestData,
+      });
+      // business logic goes here
+    } catch (error) {
+      new Notice(t("Image Upload API error") + ": " + error.toString());
+      return error;
     }
 
-    let res = (await response.json()) as ApiResponse;
-
-    console.log("uploadFileByClipboard response", res);
-
-    res.success = true;
-    res.data.imageTitle =
-      res.data.imageTitle == null ? "" : res.data.imageTitle;
-
-    this.settings.uploadedImages = [
-      ...(this.settings.uploadedImages || []),
-      res.data.imageUrl,
-    ];
-
-    return res;
+    if (!response.ok) {
+      await handleApiResponseServerError(response);
+    }
+    return await handleApiResponse(response, this.settings);
   }
 }

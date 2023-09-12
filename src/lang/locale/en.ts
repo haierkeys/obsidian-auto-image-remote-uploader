@@ -40,4 +40,19 @@ export default {
 
   "Please select the markdown note you want to edit":
     "Please select the markdown note you want to edit",
+
+  "Upload error": "Upload error",
+  "Upload error, please check your Vault configuration and network connection":
+    "~~⚠️Upload error, please check your Vault configuration and network connection~~",
+
+  "No image file was parsed": "No image file was parsed",
+
+  "image files have been found, and the upload has started":
+    "image files have been found, and the upload has started",
+  "The current file has been changed, and the download has failed":
+    "The current file has been changed, and the download has failed",
+  "The current file has been changed, and the upload has failed":
+    "The current file has been changed, and the upload has failed",
+
+  "Image Upload API error": "Image Upload API error",
 };
