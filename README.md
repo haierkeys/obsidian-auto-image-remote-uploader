@@ -14,19 +14,18 @@ Add remote image uploading and saving function for Obsidian, main features:
 
 This plugin is provided free of charge to everyone, but if you would like to show your appreciation or help support the continued development, please feel free to provide me with a little help in any of the following ways:
 
-- [! [Paypal](https://img.shields.io/badge/paypal-HaierSpi-yellow?style=social&logo=paypal)](https://paypal.me/haierspi)
+- [![Paypal](https://img.shields.io/badge/paypal-HaierSpi-yellow?style=social&logo=paypal)](https://paypal.me/haierspi)
 
-- [<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="BuyMeACoffee" width="100">](https://www.buymeacoffee.com /haierspi)
-<img src="https://raw.githubusercontent.com/haierspi/obsidian-auto-image-remote-uploader/main/bmc_qr.png" style="width:120px;height. auto;">
+- [<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="BuyMeACoffee" width="100">](https://www.buymeacoffee.com/haierspi)
+<img src="https://raw.githubusercontent.com/haierspi/obsidian-auto-image-remote-uploader/main/bmc_qr.png" style="width:120px;height:auto;">
 
-
-- Love Power https://afdian.net/a/haierspi
+- afdian: https://afdian.net/a/haierspi
 
 # Getting Started
 
 1. Install the plugin
 2. Open the plugin configuration item, set **image-upload-api** to your image upload API `http://127.0.0.1:8000/api/upload`, and set **authorization-token**.
-3. Start the **golang-image-upload-service** service. 4.
+3. Start the **golang-image-upload-service** service.
 4. Open the **golang-image-upload-service** service and see if it uploads successfully
 
 ## Image upload API server
@@ -45,7 +44,7 @@ Support ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".svg", ".tiff".
 ```yaml
 ---
 image-auto-upload: true
---- - - - - - - - - - - - - - - - - - - - - - -
+---
 ```
 
 ## Batch upload all image files in a file
