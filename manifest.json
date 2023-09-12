@@ -3,7 +3,7 @@
   "name": "Obsidian Auto Image Remote Uploader",
   "version": "0.1.0",
   "minAppVersion": "0.10.7",
-  "description": "auto upload image with website upload service & nas upload service",
+  "description": "Added Obsidian remote image upload and save function, which can upload note images to your home NAS and synchronize to cloud storage (aliyun oss, aws S3, google ECS)",
   "author": "haierspi",
   "authorUrl": "https://github.com/haierspi/obsidian-auto-image-remote-uploader",
   "isDesktopOnly": true
