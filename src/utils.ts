@@ -1,6 +1,15 @@
 import { resolve, extname, relative, join, parse, posix } from "path";
 import { Readable } from "stream";
 import { clipboard } from "electron";
+import {
+  App,
+  Keymap,
+  normalizePath,
+  Platform,
+  TAbstractFile,
+  TFile,
+  TFolder,
+} from "obsidian";
 
 export interface IStringKeyMap<T> {
   [key: string]: T;
@@ -94,3 +103,25 @@ export function arrayToObject<T extends AnyObj>(
   });
   return obj;
 }
+
+export const getFolderFromPath = (app: App, path: string): TFolder => {
+  if (!path) return null;
+  const afile = getAbstractFileAtPath(app, removeTrailingSlashFromFolder(path));
+  if (!afile) return null;
+  return afile instanceof TFolder ? afile : afile.parent;
+};
+
+export const getAbstractFileAtPath = (app: App, path: string) => {
+  return app.vault.getAbstractFileByPath(path);
+};
+
+export const abstractFileAtPathExists = (app: App, path: string) => {
+  return app.vault.getAbstractFileByPath(path) ? true : false;
+};
+
+export const removeTrailingSlashFromFolder = (path: string) =>
+  path == "/"
+    ? path
+    : path.slice(-1) == "/"
+    ? path.substring(0, path.length - 1)
+    : path;

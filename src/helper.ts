@@ -48,11 +48,11 @@ export default class Helper {
   setValue(value: string) {
     const editor = this.getEditor();
     const { left, top } = editor.getScrollInfo();
-    const position = editor.getCursor();
+    // const position = editor.getCursor();
 
     editor.setValue(value);
     editor.scrollTo(left, top);
-    editor.setCursor(position);
+    //editor.setCursor(position);
   }
 
   // get all file urls, include local and internet

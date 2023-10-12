@@ -6,6 +6,7 @@ import {
   Menu,
   MenuItem,
   TFile,
+  TFolder,
   normalizePath,
   Notice,
   addIcon,
@@ -22,9 +23,11 @@ import imageType from "image-type";
 import {
   isAssetTypeAnImage,
   isAnImage,
+  getFolderFromPath,
   getUrlAsset,
   arrayToObject,
 } from "./utils";
+
 import { RemoteUploader } from "./uploader";
 import Helper, { Image } from "./helper";
 import { t } from "./lang/helpers";
@@ -130,9 +133,56 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
         }
       )
     );
+
+    const UploadAllImagesMenuHandler = (menu: Menu, file: TFile) => {
+      menu.addItem((item: MenuItem) => {
+        item.setTitle("Upload all images").onClick(e => {
+          this.uploadAllFile();
+        });
+      });
+    };
+
+    const DownloadAllImagesMenuHandler = (menu: Menu, file: TFile) => {
+      menu.addItem((item: MenuItem) => {
+        item.setTitle("Download all images").onClick(e => {
+          this.downloadAllImageFiles();
+        });
+      });
+    };
+
+    this.registerEvent(
+      this.app.workspace.on("file-menu", DownloadAllImagesMenuHandler)
+    );
+    this.registerEvent(
+      this.app.workspace.on("file-menu", UploadAllImagesMenuHandler)
+    );
   }
 
   addMenu = (menu: Menu, imgPath: string, editor: Editor) => {};
+
+  getDefaultNoteFileFolder(): TFolder {
+    const activeFile = this.app.workspace.getActiveFile();
+    let newFileLocation = (this.app.vault as any).getConfig("newFileLocation");
+
+    return (
+      (newFileLocation == "folder"
+        ? getFolderFromPath(
+            app,
+            (this.app.vault as any).getConfig("newFileFolderPath")
+          )
+        : newFileLocation == "current" && activeFile
+        ? getFolderFromPath(app, activeFile.path)
+        : this.app.vault.getRoot()) ?? this.app.vault.getRoot()
+    );
+  }
+
+  // 获取当前文件所属的附件文件夹
+  getFileAssetPath() {
+    const basePath = (
+      this.app.vault.adapter as FileSystemAdapter
+    ).getBasePath();
+    return join(basePath, this.getDefaultNoteFileFolder().path);
+  }
 
   async downloadAllImageFiles() {
     if (this.app.workspace.getActiveViewOfType(MarkdownView) == null) {
@@ -212,29 +262,6 @@ export default class autoImageRemoteUploaderPlugin extends Plugin {
         fileArray.length - imageArray.length
       }`
     );
-  }
-
-  // 获取当前文件所属的附件文件夹
-  getFileAssetPath() {
-    const basePath = (
-      this.app.vault.adapter as FileSystemAdapter
-    ).getBasePath();
-
-    // @ts-ignore
-    const assetFolder: string = this.app.vault.config.attachmentFolderPath;
-    const activeFile = this.app.vault.getAbstractFileByPath(
-      this.app.workspace.getActiveFile().path
-    );
-
-    // 当前文件夹下的子文件夹
-
-    if (assetFolder.startsWith("./")) {
-      const activeFolder = decodeURI(resolve(basePath, activeFile.parent.path));
-      return join(activeFolder, assetFolder);
-    } else {
-      // 根文件夹
-      return join(basePath, assetFolder);
-    }
   }
 
   async download(url: string, folderPath: string, name: string) {

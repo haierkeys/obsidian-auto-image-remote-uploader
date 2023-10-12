@@ -1,6 +1,6 @@
 {
   "name": "auto-image-remote-uploader",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "description": "Added Obsidian remote image upload and save function, which can upload note images to your home NAS and synchronize to cloud storage (aliyun oss, aws S3, google ECS)",
   "main": "main.js",
@@ -9,7 +9,6 @@
     "build": "rollup --config rollup.config.js"
   },
   "keywords": [
-    "obsidian.md",
     "image",
     "upload",
     "remote",
